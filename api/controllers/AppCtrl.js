@@ -22,14 +22,14 @@
 
 	var PersonCtrl = function($scope, $http, $routeParams){
 
-		$http.get('/people/' + $routeParams.peopleId)
-				.then(onGetByIdCompleted);
-			console.log($routeParams.peopleId);
-
 		var onGetByIdCompleted = function(response){
 			$scope.person = response.data;
 			console.log("onGetByIdCompleted");
 		}
+
+		$http.get('/people/' + $routeParams.peopleId)
+				.then(onGetByIdCompleted);
+			console.log($routeParams.peopleId);
 	}
 	myApp.controller('PersonCtrl', PersonCtrl);
 })();
