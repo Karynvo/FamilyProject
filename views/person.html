@@ -1,6 +1,12 @@
-<h2>People</h2>
-<div class="container">
-	<h3 ng-repeat="person in persons">
-		<a ng-href='/#/people/{{person._id}}'>{{person.name}}</a>
-	</h3>
-</div>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Name</th>
+		</tr>
+	</thead>
+	<tbody ng-repeat="person in persons">
+		<tr>
+			<td><a ng-href='/#/people/{{person._id}}'>{{person.name}}</a></td>
+		</tr>
+	</tbody>
+</table>
