@@ -14,6 +14,10 @@ var PersonSchema = new Schema({
 	description: {
 		type: String,
 		default: 'Empty description'
+	},
+	profileImg: {
+		type: String,
+		default: 'default-person.png'
 	}
 });
 
