@@ -49,3 +49,11 @@ jspm_packages
 # Mac's DS_Store
 .DS_Store
 
+# md folder
+mdFiles
+
+# images folder
+images
+
+# bootstrap 4 folder
+bootstrap-4.0.0-beta-dist

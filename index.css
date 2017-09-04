@@ -7,3 +7,11 @@ img {
     background-repeat:   no-repeat;
     background-size:     cover;
 }
+
+#dob {
+	float: left;
+}
+
+.nav-item {
+	float: left;
+}

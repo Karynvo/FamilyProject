@@ -11,6 +11,9 @@
 		.when("/people/:peopleId", {
 			templateUrl: 'views/persondetail.html',
 			controller: "PersonCtrl"
+		})
+		.when("/history", {
+			templateUrl: 'views/historyIndex.html'
 		});
 	});
 })();
