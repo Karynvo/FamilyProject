@@ -1,7 +1,7 @@
 (function(){
 	var app = angular.module("myApp", ['ngRoute']);
 
-	// only for spa syntax ex. /#/person
+	// only for spa syntax ex. /#!/person
 	app.config(function($routeProvider){
 		$routeProvider
 		.when("/", {
@@ -14,6 +14,11 @@
 		})
 		.when("/history", {
 			templateUrl: 'views/historyIndex.html'
+		})
+		.when("/history/:historyPage", {
+			templateUrl: function(routeParams){
+				return "views/" + routeParams.historyPage + ".html";
+			}
 		});
 	});
 })();
