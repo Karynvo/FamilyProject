@@ -15,3 +15,7 @@ img {
 .nav-item {
 	float: left;
 }
+
+.header{
+	padding: 20px;
+}
