@@ -37,9 +37,17 @@ d3.text("../api/static/tree.csv", function (error, data) {
       .attr("r", 2.5);
 
   node.append("text")
-      .attr("dy", 3)
+  	  .attr("class", "member")
+      .attr("dy", function(d) { return d.data.spouse ? -6 : 3; })
       .attr("x", function(d) { return d.children ? -8 : 8; })
       .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
-      .text(function(d) { return d.id.substring(d.id.lastIndexOf(".") + 1); });
+      .text(function(d) { return d.data.name; });
+
+  node.append("text")
+  	  .attr("class", "spouse")
+      .attr("dy", 6)
+      .attr("x", function(d) { return d.children ? -8 : 8; })
+      .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
+      .text(function(d) { return d.data.spouse; });
 
 });
