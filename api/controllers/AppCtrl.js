@@ -12,7 +12,6 @@
 		var refresh = function(){
 			$http.get('/people')
 				.then(onPersonGetCompleted);
-			console.log("refersh");
 		}
 
 		refresh();
