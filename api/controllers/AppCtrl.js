@@ -7,13 +7,12 @@
 
 		var onPersonGetCompleted = function(response){
 			$scope.persons = response.data;
-			console.log($scope.persons);
 		}
 
 		var refresh = function(){
 			$http.get('/people')
 				.then(onPersonGetCompleted);
-			console.log("refresh finished");
+			console.log("refersh");
 		}
 
 		refresh();
@@ -24,12 +23,10 @@
 
 		var onGetByIdCompleted = function(response){
 			$scope.person = response.data;
-			console.log("onGetByIdCompleted");
 		}
 
 		$http.get('/people/' + $routeParams.peopleId)
 				.then(onGetByIdCompleted);
-			console.log($routeParams.peopleId);
 	}
 	myApp.controller('PersonCtrl', PersonCtrl);
 })();

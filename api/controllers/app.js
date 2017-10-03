@@ -5,6 +5,10 @@
 	app.config(function($routeProvider){
 		$routeProvider
 		.when("/", {
+			templateUrl: 'views/treeDiagram.html',
+			controller: "TreeCtrl"
+		})
+		.when("/people", {
 			templateUrl: 'views/person.html',
 			controller: "AppCtrl"
 		})
