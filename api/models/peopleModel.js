@@ -7,10 +7,6 @@ var PersonSchema = new Schema({
 		type: String,
 		required: 'Name of person'
 	},
-	dob: {
-		type: String,
-		default: 'Unknown'
-	},
 	description: {
 		type: String,
 		default: 'Empty description'

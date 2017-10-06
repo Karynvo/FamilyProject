@@ -43,7 +43,13 @@
 		  node.append("circle")
 		      .attr("r", 2.5);
 
-		  node.append("text")
+		  node.append("a")
+		  		.attr("href", function(d) { 
+		  			return "#!/people/" + parseId(d.data._id); 
+		  		});
+
+		  node.selectAll("a")
+		  		.append("text")
 		  	  .attr("class", "member")
 		      .attr("dy", function(d) { return d.data.spouse ? -6 : 3; })
 		      .attr("x", function(d) { return d.children ? -8 : 8; })
@@ -58,6 +64,10 @@
 		      .text(function(d) { return d.data.spouse; });
 
 		});
+	}
+
+	var parseId = function(id){
+		return id.replace("ObjectId(", "").replace(")", "");
 	}
 
 	var TreeCtrl = function ($scope) {
