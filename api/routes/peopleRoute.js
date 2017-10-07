@@ -1,13 +1,13 @@
 'use strict';
 module.exports = function(app){
-	var peopleList = require('../controllers/peopleController');
+	var person = require('../controllers/peopleController');
 
 	app.route('/people')
-		.get(peopleList.list_all_people)
-		.post(peopleList.create_a_person);
+		.get(person.list_all_people)
+		.post(person.create_a_person);
 
 	app.route('/people/:personId')
-		.get(peopleList.get_a_person)
-		.put(peopleList.update_a_person)
-		.delete(peopleList.delete_a_person);
+		.get(person.get_a_person)
+		.put(person.update_a_person)
+		.delete(person.delete_a_person);
 };

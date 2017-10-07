@@ -11,7 +11,11 @@
 		</div>
 	</div>
 	<hr/>
-	<div class="row">
-		<h3>Gallery</h3>
+	<div ng-show=person.spouse class="row">
+		<h4>{{person.spouse}}</h4>
+	</div>
+	<hr/>
+	<div ng-show=person.photos class="row">
+		<h4>Gallery</h4>
 	</div>
 </div
