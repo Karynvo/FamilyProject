@@ -26,6 +26,11 @@
 
 		$http.get('/people/' + $routeParams.peopleId)
 				.then(onGetByIdCompleted);
+
+		$scope.getSpouseId = function(){
+			if($scope.person.spouse !== undefined)
+				return $scope.person.spouse.replace(" ", "-");
+		}
 	}
 	myApp.controller('PersonCtrl', PersonCtrl);
 })();

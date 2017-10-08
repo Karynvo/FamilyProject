@@ -43,12 +43,15 @@
 		  node.append("circle")
 		      .attr("r", 2.5);
 
+		  // draw links for member in tree
 		  node.append("a")
+		  		.attr("class", "memberLink")
 		  		.attr("href", function(d) { 
 		  			return "#!/people/" + parseId(d.data._id); 
 		  		});
 
-		  node.selectAll("a")
+		  // add label for member in tree
+		  node.selectAll(".memberLink")
 		  		.append("text")
 		  	  .attr("class", "member")
 		      .attr("dy", function(d) { return d.data.spouse ? -6 : 3; })
@@ -56,7 +59,16 @@
 		      .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
 		      .text(function(d) { return d.data.name; });
 
-		  node.append("text")
+		  // draw links for people in tree
+		  node.append("a")
+		  		.attr("class", "spouseLink")
+		  		.attr("href", function(d) { 
+		  			return "#!/people/" + parseId(d.data._id) + "#" + d.data.spouse.replace(" ", "-"); 
+		  		});
+
+		  // add label for spouse
+		  node.selectAll(".spouseLink")
+		  		.append("text")
 		  	  .attr("class", "spouse")
 		      .attr("dy", 6)
 		      .attr("x", function(d) { return d.children ? -8 : 8; })

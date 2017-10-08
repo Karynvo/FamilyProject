@@ -11,7 +11,7 @@
 		</div>
 	</div>
 	<hr/>
-	<div ng-show=person.spouse class="row">
+	<div ng-if=person.spouse class="row" id="{{getSpouseId()}}">
 		<h4>{{person.spouse}}</h4>
 	</div>
 	<hr/>

@@ -7,6 +7,8 @@ var PersonSchema = new Schema({
 		type: String,
 		required: 'Name of person'
 	},
+	parent: String,
+	spouse: String,
 	description: {
 		type: String,
 		default: 'Empty description'
@@ -17,4 +19,5 @@ var PersonSchema = new Schema({
 	}
 });
 
+// to use Schema, must convert to model
 module.exports = mongoose.model('Person', PersonSchema);
