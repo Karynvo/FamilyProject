@@ -57,3 +57,6 @@ images
 
 # bootstrap 4 folder
 bootstrap-4.0.0-beta-dist
+
+# update interface
+*update.html

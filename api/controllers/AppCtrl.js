@@ -3,7 +3,7 @@
 (function(){
 	var myApp = angular.module('myApp');
 
-	var AppCtrl = function($scope, $http){
+	var AppCtrl = function($scope, $http, $routeParams){
 
 		var onPersonGetCompleted = function(response){
 			$scope.persons = response.data;
@@ -12,6 +12,12 @@
 		var refresh = function(){
 			$http.get('/people')
 				.then(onPersonGetCompleted);
+		}
+
+		$scope.updatePerson = function(id){
+			console.log("update person: " + id);
+			$http.put('/people/' + id);
+			refresh();
 		}
 
 		refresh();

@@ -16,6 +16,10 @@
 			templateUrl: 'views/persondetail.html',
 			controller: "PersonCtrl"
 		})
+		.when("/update", {
+			templateUrl: 'views/update.html',
+			controller: "AppCtrl"
+		})
 		.when("/history", {
 			templateUrl: 'views/historyIndex.html'
 		})
