@@ -14,10 +14,10 @@
 				.then(onPersonGetCompleted);
 		}
 
-		$scope.updatePerson = function(id){
-			console.log("update person: " + id);
-			$http.put('/people/' + id);
-			refresh();
+		$scope.updatePerson = function(index){
+			var selectedPerson = $scope.persons[index];
+			$http.put('/people/' + selectedPerson._id, selectedPerson)
+				.then(refresh());
 		}
 
 		refresh();
