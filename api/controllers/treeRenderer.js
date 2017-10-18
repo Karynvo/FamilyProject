@@ -28,10 +28,10 @@
 			.parentId(function(d){ return d.parent; })
 			(table);
 
-			var link = g.selectAll(".link")
+			var link = g.selectAll(".normal-link")
 		    .data(treemap(root).links())
 		    .enter().append("path")
-		      .attr("class", "link")
+		      .attr("class", "normal-link")
 		      .attr("d", d3.linkHorizontal()
 		          .x(function(d) { return d.y; })
 		          .y(function(d) { return d.x; }));
@@ -50,6 +50,7 @@
 		      		$scope.firstPerson = d;
 		      	}else if($scope.secondPerson == null){
 		      		$scope.secondPerson = d;
+		      		createPaths($scope.firstPerson, $scope.secondPerson);
 		      	}else{
 		      		d3.select("#" + turnNameToId($scope.firstPerson.data.name))
 		      			.select("circle")
@@ -57,7 +58,7 @@
 		      		$scope.firstPerson = $scope.secondPerson;
 		      		$scope.secondPerson = d;
 
-		      		console.log($scope.firstPerson.path($scope.secondPerson));
+		      		createPaths($scope.firstPerson, $scope.secondPerson);
 		      	}
 
 		      	d3.select(this).classed("turnRed", true);
@@ -97,6 +98,32 @@
 		      .text(function(d) { return d.data.spouse; });
 
 		});
+	}
+
+	var createPaths = function(firstPerson, secondPerson){
+		var paths = firstPerson.path(secondPerson);
+      		console.log(paths);
+
+      		var link = d3.linkHorizontal()
+			    .x(function(d) { return d.y; })
+			    .y(function(d) { return d.x; });
+
+			d3.selectAll(".path-link")
+				.classed("path-link", false);
+				d3.selectAll(".path-link").classed("normal-link", true);
+
+      		for (var i = 0; i < paths.length - 1; i++) {
+      			var path = link({
+	      			source: paths[i],
+	      			target: paths[i+1]
+	      		});
+	      		
+	      		var selectPath = 'path[d = "' + path + '"]';
+	      		console.log(selectPath);
+      			d3.selectAll(selectPath)
+  					.classed("normal-link", false);
+					d3.selectAll(selectPath).classed("path-link", true);
+			}
 	}
 
 	var parseId = function(id){
