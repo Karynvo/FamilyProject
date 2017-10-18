@@ -1,20 +1,17 @@
 <style>
 
-.node circle {
+/*.node circle {
   fill: #999;
-}
+}*/
 
 .node text {
   font: 12px sans-serif;
-}
-
-.node--internal circle {
-  fill: #555;
-}
-
-.node--internal text {
   text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
 }
+
+/*.node--internal circle {
+  fill: #555;
+}*/
 
 .link {
   fill: none;
@@ -26,7 +23,13 @@
 .member {
 	fill: purple;
 }
+
+.turnRed {
+  fill: red;
+}
 </style>
 <div class="treeDiv">
 	<h5>Tree Diagram</h5>
+  <h5>First person: {{firstPerson.data.name}}</h5>
+  <h5>Second person: {{secondPerson.data.name}}</h5>
 </div>

@@ -3,7 +3,9 @@
 (function(){
 	var myApp = angular.module('myApp');
 
-	var renderTree = function() {
+	var renderTree = function($scope) {
+		// $scope.firstPerson = null;
+		// $scope.secondPerson = null;
 		
 		var margin = { top: 10, right: 150, bottom: 10, left: 150 },
 		    width = 960 - margin.left - margin.right,
@@ -38,20 +40,39 @@
 		    .data(root.descendants())
 		    .enter().append("g")
 		      .attr("class", function(d) { return "node" + (d.children ? " node--internal" : " node--leaf"); })
+		      .attr("id", function(d) { return turnNameToId(d.data.name); })
 		      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
 
 		  node.append("circle")
-		      .attr("r", 2.5);
+		      .attr("r", 25)
+		      .on("click", function(d){
+		      	if($scope.firstPerson == null){
+		      		$scope.firstPerson = d;
+		      	}else if($scope.secondPerson == null){
+		      		$scope.secondPerson = d;
+		      	}else{
+		      		d3.select("#" + turnNameToId($scope.firstPerson.data.name))
+		      			.select("circle")
+		      			.classed("turnRed", false);
+		      		$scope.firstPerson = $scope.secondPerson;
+		      		$scope.secondPerson = d;
+
+		      		console.log($scope.firstPerson.path($scope.secondPerson));
+		      	}
+
+		      	d3.select(this).classed("turnRed", true);
+		      	$scope.$apply();
+		      });
 
 		  // draw links for member in tree
 		  node.append("a")
-		  		.attr("class", "memberLink")
+		  		.attr("class", "memberText")
 		  		.attr("href", function(d) { 
 		  			return "#!/people/" + parseId(d.data._id); 
 		  		});
 
 		  // add label for member in tree
-		  node.selectAll(".memberLink")
+		  node.selectAll(".memberText")
 		  		.append("text")
 		  	  .attr("class", "member")
 		      .attr("dy", function(d) { return d.data.spouse ? -6 : 3; })
@@ -61,13 +82,13 @@
 
 		  // draw links for people in tree
 		  node.append("a")
-		  		.attr("class", "spouseLink")
+		  		.attr("class", "spouseText")
 		  		.attr("href", function(d) { 
 		  			return "#!/people/" + parseId(d.data._id) + "#" + d.data.spouse.replace(" ", "-"); 
 		  		});
 
 		  // add label for spouse
-		  node.selectAll(".spouseLink")
+		  node.selectAll(".spouseText")
 		  		.append("text")
 		  	  .attr("class", "spouse")
 		      .attr("dy", 6)
@@ -82,8 +103,12 @@
 		return id.replace("ObjectId(", "").replace(")", "");
 	}
 
+	var turnNameToId = function(name){
+		return name.replace(" ", "-");
+	}
+
 	var TreeCtrl = function ($scope) {
-		renderTree();
+		renderTree($scope);
 	}
 	myApp.controller('TreeCtrl', TreeCtrl);
 })();
