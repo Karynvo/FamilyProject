@@ -36,8 +36,6 @@
 		          .x(function(d) { return d.y; })
 		          .y(function(d) { return d.x; }));
 
-		      // console.log(treemap(root).links());
-
 		  var node = g.selectAll(".node")
 		    .data(root.descendants())
 		    .enter().append("g")
@@ -48,37 +46,36 @@
 		  node.append("circle")
 		      .attr("r", 25)
 		      .on("click", function(d){
-		      	if($scope.firstPerson == null){
-		      		$scope.firstPerson = d;
-		      	}else{ 
-		      		if($scope.secondPerson == null){
-			      		$scope.secondPerson = d;
-			      	}else{
-			      		d3.select("#" + turnNameToId($scope.firstPerson.data.name))
-			      			.select("circle")
-			      			.classed("turnRed", false);
-			      		$scope.firstPerson = $scope.secondPerson;
-			      		$scope.secondPerson = d;
-			      	}
-			      	createPaths($scope.firstPerson, $scope.secondPerson);
-			      	$scope.relation = getRelation($scope.firstPerson, $scope.secondPerson);
+
+		      	if($scope.pivot == null){
+		      		$scope.pivot = d;
+		      	}else{ //switch pivot
+			      		$scope.oldPivotId = turnNameToId($scope.pivot.data.name);
+			      		$scope.pivot = d;
 		        }
+
 		      	d3.select(this).classed("turnRed", true);
 		      	$scope.$apply();
 		      })
 		      .on("mouseover", function(d){
-		      	if($scope.firstPerson != null){
-		      		var refPerson = $scope.secondPerson==null ? $scope.firstPerson : $scope.secondPerson;
-			      	createPaths(refPerson, d);
-			      	$scope.relation = getRelation(refPerson, d);
+		      	if($scope.pivot != null && $scope.pivot != d){
+
+		      		d3.select("#" + $scope.oldPivotId)
+		      			.select("circle")
+		      			.classed("turnRed", false);
+			      	createPaths($scope.pivot, d);
+			      	$scope.relation = getRelation($scope.pivot, d);
 		        
 			      	d3.select(this).classed("turnRed", true);
 			      	$scope.$apply();
 		      	}
 		      })
 		      .on("mouseout", function(d){
-		      	if($scope.firstPerson != null && $scope.firstPerson != d && $scope.secondPerson != d){
+		      	if($scope.pivot != d){
 		      		d3.select(this).classed("turnRed", false);
+		      		d3.selectAll(".path-link")
+		      			.classed("path-link", false)
+		      			.classed("normal-link", true);
 		      	}
 		      });
 
