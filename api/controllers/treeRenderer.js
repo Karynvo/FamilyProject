@@ -36,6 +36,8 @@
 		          .x(function(d) { return d.y; })
 		          .y(function(d) { return d.x; }));
 
+		      // console.log(treemap(root).links());
+
 		  var node = g.selectAll(".node")
 		    .data(root.descendants())
 		    .enter().append("g")
@@ -48,21 +50,36 @@
 		      .on("click", function(d){
 		      	if($scope.firstPerson == null){
 		      		$scope.firstPerson = d;
-		      	}else if($scope.secondPerson == null){
-		      		$scope.secondPerson = d;
-		      		createPaths($scope.firstPerson, $scope.secondPerson);
-		      	}else{
-		      		d3.select("#" + turnNameToId($scope.firstPerson.data.name))
-		      			.select("circle")
-		      			.classed("turnRed", false);
-		      		$scope.firstPerson = $scope.secondPerson;
-		      		$scope.secondPerson = d;
-
-		      		createPaths($scope.firstPerson, $scope.secondPerson);
-		      	}
-
+		      	}else{ 
+		      		if($scope.secondPerson == null){
+			      		$scope.secondPerson = d;
+			      	}else{
+			      		d3.select("#" + turnNameToId($scope.firstPerson.data.name))
+			      			.select("circle")
+			      			.classed("turnRed", false);
+			      		$scope.firstPerson = $scope.secondPerson;
+			      		$scope.secondPerson = d;
+			      	}
+			      	createPaths($scope.firstPerson, $scope.secondPerson);
+			      	$scope.relation = getRelation($scope.firstPerson, $scope.secondPerson);
+		        }
 		      	d3.select(this).classed("turnRed", true);
 		      	$scope.$apply();
+		      })
+		      .on("mouseover", function(d){
+		      	if($scope.firstPerson != null){
+		      		var refPerson = $scope.secondPerson==null ? $scope.firstPerson : $scope.secondPerson;
+			      	createPaths(refPerson, d);
+			      	$scope.relation = getRelation(refPerson, d);
+		        
+			      	d3.select(this).classed("turnRed", true);
+			      	$scope.$apply();
+		      	}
+		      })
+		      .on("mouseout", function(d){
+		      	if($scope.firstPerson != null && $scope.firstPerson != d && $scope.secondPerson != d){
+		      		d3.select(this).classed("turnRed", false);
+		      	}
 		      });
 
 		  // draw links for member in tree
@@ -102,28 +119,113 @@
 
 	var createPaths = function(firstPerson, secondPerson){
 		var paths = firstPerson.path(secondPerson);
-      		console.log(paths);
+  		// console.log(paths);
 
-      		var link = d3.linkHorizontal()
-			    .x(function(d) { return d.y; })
-			    .y(function(d) { return d.x; });
+  		var link = d3.linkHorizontal()
+		    .x(function(d) { return d.y; })
+		    .y(function(d) { return d.x; });
 
-			d3.selectAll(".path-link")
-				.classed("path-link", false);
-				d3.selectAll(".path-link").classed("normal-link", true);
+		d3.selectAll(".path-link")
+			.classed("normal-link", true)
+			.classed("path-link", false);
 
-      		for (var i = 0; i < paths.length - 1; i++) {
-      			var path = link({
+  		for (var i = 0; i < paths.length - 1; i++) {
+  			var path;
+
+  			if(paths[i].depth < paths[i+1].depth){
+	  			path = link({
 	      			source: paths[i],
 	      			target: paths[i+1]
 	      		});
-	      		
-	      		var selectPath = 'path[d = "' + path + '"]';
-	      		console.log(selectPath);
-      			d3.selectAll(selectPath)
-  					.classed("normal-link", false);
-					d3.selectAll(selectPath).classed("path-link", true);
+	  		}else if(paths[i].depth > paths[i+1].depth){
+	  			path = link({
+	      			source: paths[i+1],
+	      			target: paths[i]
+	      		});
+	  		}else{
+	  			console.log("depth is the same:");
+	  			console.log(paths[i]);
+	  			console.log(paths[i+1]);
+	  		}
+
+      		var selectPath = 'path[d = "' + path + '"]';
+      		// console.log(selectPath);
+  			d3.selectAll(selectPath)
+				.classed("path-link", true)
+				.classed("normal-link", false);
+		}
+	}
+
+	var getRelation = function(firstPerson, secondPerson){
+		var depthDifference = 0;
+		var numLevelsAboveCurrent = 0;
+		var lowerPerson;
+		var origLowerPerson;
+		var higherPerson;
+
+		// if depth is same, find common ancestor
+		if(firstPerson.depth != secondPerson.depth){
+			if(firstPerson.depth > secondPerson.depth){
+				lowerPerson = firstPerson;
+				origLowerPerson = firstPerson;
+				higherPerson = secondPerson;
+			}else{
+				lowerPerson = secondPerson;
+				origLowerPerson = secondPerson;
+				higherPerson = firstPerson;
 			}
+
+			while(lowerPerson.depth > higherPerson.depth){
+				lowerPerson = lowerPerson.parent;
+				depthDifference++;
+			}
+			// console.log("depthDifference: " + depthDifference);
+			// console.log("numLevelsAboveCurrent: " + moveUpTree(lowerPerson, higherPerson, 0));
+			numLevelsAboveCurrent = moveUpTree(lowerPerson, higherPerson, 0);
+		}else{
+			// console.log("numLevelsAboveCurrent: " + moveUpTree(firstPerson, secondPerson, 0));
+			numLevelsAboveCurrent = moveUpTree(firstPerson, secondPerson, 0);
+		}
+
+		// if depth is different, have lower depth 
+		// move to higher depth and then find common ancestor
+
+		// if depth is different, then they're not cousins
+		// if depth is the same, either siblings or cousins
+		var returnString = "";
+		if(depthDifference == 0){
+			returnString = firstPerson.id + " and " + secondPerson.id + " are ";
+			if(numLevelsAboveCurrent == 0)
+				returnString += "self";
+			else if(numLevelsAboveCurrent == 1)
+				returnString += "siblings";
+			else
+				returnString += "cousins";
+		}else if(depthDifference > 0){
+			returnString = higherPerson.id + " is ";
+			var count = depthDifference;
+			while(count > 1){
+				if(count == 2){
+					returnString += "grand";
+					break;
+				}
+				returnString += "great ";
+				count--;
+			}
+			if(numLevelsAboveCurrent > 0)
+				returnString += "aunt/uncle";
+			else
+				returnString += "parent";
+			returnString += " to " + origLowerPerson.id;
+		}
+		return returnString;
+	}
+
+	var moveUpTree = function(firstPerson, secondPerson, numLevelsAboveCurrent){
+		if(firstPerson.id != secondPerson.id){
+			return moveUpTree(firstPerson.parent, secondPerson.parent, numLevelsAboveCurrent+1);
+		}
+		return numLevelsAboveCurrent;
 	}
 
 	var parseId = function(id){
