@@ -50,13 +50,14 @@
 		      	if($scope.pivot == null){
 		      		$scope.pivot = d;
 		      	}else{ //switch pivot
-			      		$scope.oldPivotId = turnNameToId($scope.pivot.data.name);
-			      		$scope.pivot = d;
+		      		$scope.oldPivotId = turnNameToId($scope.pivot.data.name);
+		      		$scope.pivot = d;
 		        }
 
 		      	d3.select(this)
 		      		.classed("normalCircle", false)
-		      		.classed("turnRed", true);
+		      		.classed("turnRedOther", false)
+		      		.classed("turnRedPivot", true);
 		      	$scope.$apply();
 		      })
 		      .on("mouseover", function(d){
@@ -64,7 +65,8 @@
 
 		      		d3.select("#" + $scope.oldPivotId)
 		      			.select("circle")
-		      			.classed("turnRed", false)
+		      			.classed("turnRedOther", false)
+		      			.classed("turnRedPivot", false)
 		      			.classed("normalCircle", true);
 
 		      		d3.selectAll(".pathCircle")
@@ -75,19 +77,29 @@
 		        
 			      	d3.select(this)
 			      		.classed("normalCircle", false)
-			      		.classed("turnRed", true);
+			      		.classed("turnRedOther", true);
 			      	$scope.$apply();
+		      	}else if($scope.pivot == null){
+		      		d3.select("#" + turnNameToId(d.id))
+		      			.select("circle")
+		      			.classed("normalCircle", false)
+		      			.classed("turnRedOther", true);
 		      	}
 		      })
 		      .on("mouseout", function(d){
 		      	if($scope.pivot != d){
 		      		d3.select(this)
-		      			.classed("turnRed", false)
+		      			.classed("turnRedOther", false)
 		      			.classed("normalCircle", true);
 
 		      		d3.selectAll(".path-link")
 		      			.classed("path-link", false)
 		      			.classed("normal-link", true);
+		      	}else if($scope.pivot == null){
+		      		d3.select("#" + turnNameToId(d.id))
+		      			.select("circle")
+		      			.classed("turnRedOther", false)
+		      			.classed("normalCircle", true);
 		      	}
 		      });
 
