@@ -44,7 +44,7 @@
 		      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
 
 		  node.append("circle")
-		      .attr("r", 25)
+		      .attr("class", "normalCircle")
 		      .on("click", function(d){
 
 		      	if($scope.pivot == null){
@@ -54,7 +54,9 @@
 			      		$scope.pivot = d;
 		        }
 
-		      	d3.select(this).classed("turnRed", true);
+		      	d3.select(this)
+		      		.classed("normalCircle", false)
+		      		.classed("turnRed", true);
 		      	$scope.$apply();
 		      })
 		      .on("mouseover", function(d){
@@ -62,17 +64,27 @@
 
 		      		d3.select("#" + $scope.oldPivotId)
 		      			.select("circle")
-		      			.classed("turnRed", false);
+		      			.classed("turnRed", false)
+		      			.classed("normalCircle", true);
+
+		      		d3.selectAll(".pathCircle")
+		      			.classed("pathCircle", false)
+		      			.classed("normalCircle", true);
 			      	createPaths($scope.pivot, d);
 			      	$scope.relation = getRelation($scope.pivot, d);
 		        
-			      	d3.select(this).classed("turnRed", true);
+			      	d3.select(this)
+			      		.classed("normalCircle", false)
+			      		.classed("turnRed", true);
 			      	$scope.$apply();
 		      	}
 		      })
 		      .on("mouseout", function(d){
 		      	if($scope.pivot != d){
-		      		d3.select(this).classed("turnRed", false);
+		      		d3.select(this)
+		      			.classed("turnRed", false)
+		      			.classed("normalCircle", true);
+
 		      		d3.selectAll(".path-link")
 		      			.classed("path-link", false)
 		      			.classed("normal-link", true);
@@ -116,7 +128,6 @@
 
 	var createPaths = function(firstPerson, secondPerson){
 		var paths = firstPerson.path(secondPerson);
-  		// console.log(paths);
 
   		var link = d3.linkHorizontal()
 		    .x(function(d) { return d.y; })
@@ -146,10 +157,16 @@
 	  		}
 
       		var selectPath = 'path[d = "' + path + '"]';
-      		// console.log(selectPath);
   			d3.selectAll(selectPath)
 				.classed("path-link", true)
 				.classed("normal-link", false);
+		}
+
+		for(var i = 1; i < paths.length - 1; i++){
+			d3.select("#" + turnNameToId(paths[i].id))
+				.select("circle")
+				.classed("normalCircle", false)
+				.classed("pathCircle", true);
 		}
 	}
 

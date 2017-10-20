@@ -1,24 +1,10 @@
 <style>
 
-/*.node circle {
-  fill: #999;
-}*/
-
 .node text {
-  font: 12px sans-serif;
+  font: 14px sans-serif;
   text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
 }
 
-/*.node--internal circle {
-  fill: #555;
-}*/
-/*
-d {
-  fill: none;
-  stroke-opacity: 0.4;
-  stroke-width: 1.5px;
-}
-*/
 .normal-link {
   stroke: #555;
   fill: none;
@@ -34,16 +20,36 @@ d {
 }
 
 .member {
-	fill: purple;
+	stroke-width: 1.5;
 }
 
 .turnRed {
   fill: red;
   stroke: black;
   stroke-width: 3;
+  r: 25;
+}
+
+.pathCircle {
+  fill: red;
+  stroke: red;
+  stroke-width: 3;
+  r: 5;
+}
+
+.normalCircle {
+  fill: white;
+  stroke: black;
+  stroke-width: 3;
+  r: 20;
+}
+
+p {
+  height: 50px;
 }
 </style>
 <div class="treeDiv">
 	<h5>Tree Diagram</h5>
+  <div class="row"></div>
   <p>{{relation}}</p>
 </div>
