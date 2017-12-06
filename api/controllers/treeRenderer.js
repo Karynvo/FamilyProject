@@ -4,8 +4,6 @@
 	var myApp = angular.module('myApp');
 
 	var renderTree = function($scope) {
-		// $scope.firstPerson = null;
-		// $scope.secondPerson = null;
 		
 		var margin = { top: 10, right: 150, bottom: 10, left: 150 },
 		    width = 960 - margin.left - margin.right,
@@ -18,10 +16,9 @@
 		    .attr('transform', 'translate(' + 
 		    	margin.left + ',' + margin.top + ')');
 
-		d3.text("../api/static/tree.csv", function (error, data) {
 			var treemap = d3.tree().size([height, width]);
 
-			var table = d3.csvParse(data);
+			var table = $scope.persons;
 
 			var root = d3.stratify()
 			.id(function(d) { return d.name; })
@@ -135,7 +132,7 @@
 		      .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
 		      .text(function(d) { return d.data.spouse; });
 
-		});
+
 	}
 
 	var createPaths = function(firstPerson, secondPerson){
@@ -262,8 +259,19 @@
 		return name.replace(" ", "-");
 	}
 
-	var TreeCtrl = function ($scope) {
-		renderTree($scope);
+	var TreeCtrl = function ($scope, $http) {
+
+		var getData = function(){
+			$http.get('/people')
+				.then(onPersonGetCompleted);
+		}
+
+		var onPersonGetCompleted = function(response){
+			$scope.persons = response.data;
+			renderTree($scope);
+		}
+
+		getData();
 	}
 	myApp.controller('TreeCtrl', TreeCtrl);
 })();
