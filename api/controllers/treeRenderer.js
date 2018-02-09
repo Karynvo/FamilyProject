@@ -19,6 +19,7 @@
 			var treemap = d3.tree().size([height, width]);
 
 			var table = $scope.persons;
+			prepareImages(table);
 
 			var root = d3.stratify()
 			.id(function(d) { return d.name; })
@@ -42,6 +43,10 @@
 
 		  node.append("circle")
 		      .attr("class", "normalCircle")
+		      // .append("image")
+		      // .attr("href", function(d){ return "../images/" + d.data.profileImg; })
+		      // .attr("clip-path", function(d){ return "url(#" + turnNameToId(d.data.name) + "-clipPath)"; })
+		      // .style("fill", function(d){ return "url(#" + turnNameToId(d.data.name) + "-pattern)"; })
 		      .on("click", function(d){
 
 		      	if($scope.pivot == null){
@@ -104,7 +109,7 @@
 		  node.append("a")
 		  		.attr("class", "memberText")
 		  		.attr("href", function(d) { 
-		  			return "#!/people/" + parseId(d.data._id); 
+		  			return "#!/people/" + d.data._id; 
 		  		});
 
 		  // add label for member in tree
@@ -120,7 +125,7 @@
 		  node.append("a")
 		  		.attr("class", "spouseText")
 		  		.attr("href", function(d) { 
-		  			return "#!/people/" + parseId(d.data._id) + "#" + d.data.spouse.replace(" ", "-"); 
+		  			return "#!/people/" + d.data._id + "#" + d.data.spouse.replace(" ", "-"); 
 		  		});
 
 		  // add label for spouse
@@ -131,8 +136,6 @@
 		      .attr("x", function(d) { return d.children ? -8 : 8; })
 		      .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
 		      .text(function(d) { return d.data.spouse; });
-
-
 	}
 
 	var createPaths = function(firstPerson, secondPerson){
@@ -251,12 +254,38 @@
 		return numLevelsAboveCurrent;
 	}
 
-	var parseId = function(id){
-		return id.replace("ObjectId(", "").replace(")", "");
-	}
-
 	var turnNameToId = function(name){
 		return name.replace(" ", "-");
+	}
+
+	var prepareImages = function(table){
+		console.log(table);
+
+		var def = d3.select("svg")
+			.append("defs");
+
+		def.selectAll("pattern")
+			.data(table)
+			.enter().append("pattern")
+			.append("clipPath")
+			.attr("id", function(d){ return turnNameToId(d.name) + "-clipPath"; })
+			.append("circle")
+			.attr("cx", 40)
+			.attr("cy", 20)
+			.attr("r", 20)
+			.attr("fill", "#FFFFFF");
+
+		d3.select("svg")
+			.selectAll("image")
+			.data(table)
+			.enter().append("image")
+			.style("x", 20)
+			.style("y", 0)
+			.style("width", 40)
+			.style("height", 40)
+			.attr("href", function(d){ return "../images/" + d.profileImg; })
+		    .attr("clip-path", function(d){ return "url(#" + turnNameToId(d.name) + "-clipPath)"; });
+
 	}
 
 	var TreeCtrl = function ($scope, $http) {
