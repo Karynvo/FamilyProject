@@ -19,12 +19,13 @@
 			var treemap = d3.tree().size([height, width]);
 
 			var table = $scope.persons;
-			prepareImages(table);
 
 			var root = d3.stratify()
 			.id(function(d) { return d.name; })
 			.parentId(function(d){ return d.parent; })
 			(table);
+
+			prepareImages(treemap(root).descendants());
 
 			var link = g.selectAll(".normal-link")
 		    .data(treemap(root).links())
@@ -39,7 +40,7 @@
 		    .enter().append("g")
 		      .attr("class", function(d) { return "node" + (d.children ? " node--internal" : " node--leaf"); })
 		      .attr("id", function(d) { return turnNameToId(d.data.name); })
-		      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
+		      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
 
 		  node.append("circle")
 		      .attr("class", "normalCircle")
@@ -258,33 +259,32 @@
 		return name.replace(" ", "-");
 	}
 
-	var prepareImages = function(table){
-		console.log(table);
+	var prepareImages = function(root){
+		console.log(root);
 
 		var def = d3.select("svg")
 			.append("defs");
 
 		def.selectAll("pattern")
-			.data(table)
+			.data(root)
 			.enter().append("pattern")
 			.append("clipPath")
-			.attr("id", function(d){ return turnNameToId(d.name) + "-clipPath"; })
+			.attr("id", function(d){ return turnNameToId(d.data.name) + "-clipPath"; })
 			.append("circle")
-			.attr("cx", 40)
+			.attr("cx", 20)
 			.attr("cy", 20)
 			.attr("r", 20)
 			.attr("fill", "#FFFFFF");
 
 		d3.select("svg")
 			.selectAll("image")
-			.data(table)
+			.data(root)
 			.enter().append("image")
-			.style("x", 20)
-			.style("y", 0)
+			.attr("transform", function(d) { return "translate(" + (d.y + 130) + "," + (d.x - 10) + ")"; }) // d.y + 130, d.x - 10
 			.style("width", 40)
 			.style("height", 40)
-			.attr("href", function(d){ return "../images/" + d.profileImg; })
-		    .attr("clip-path", function(d){ return "url(#" + turnNameToId(d.name) + "-clipPath)"; });
+			.attr("href", function(d){ return "../images/" + d.data.profileImg; })
+		    .attr("clip-path", function(d){ return "url(#" + turnNameToId(d.data.name) + "-clipPath)"; });
 
 	}
 
