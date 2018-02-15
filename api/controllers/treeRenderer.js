@@ -43,14 +43,17 @@
 		      .attr("id", function(d) { return turnNameToId(d.data.name); })
 		      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
 
-		  node.append("image")
+		  var circleContainer = node.append("g")
+		    .attr("class", "circleContainer");
+
+		  circleContainer.append("image")
 			.attr("transform", function(d) { return "translate(-20,-20)"; })
 			.style("width", 40)
 			.style("height", 40)
 			.attr("href", function(d){ return "../images/" + d.data.profileImg; })
 		    .attr("clip-path", function(d){ return "url(#" + turnNameToId(d.data.name) + "-clipPath)"; });
 
-		  node.append("circle")
+		  circleContainer.append("circle")
 		      .attr("class", "normalCircle")
 		      .on("click", function(d){
 
