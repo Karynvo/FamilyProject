@@ -13,6 +13,7 @@
 		    .attr('width', width + margin.left + margin.right)
 		    .attr('height', height + margin.top + margin.bottom),
 		  g = svg.append('g')
+		  	.attr("class", "main-g")
 		    .attr('transform', 'translate(' + 
 		    	margin.left + ',' + margin.top + ')');
 
@@ -42,12 +43,15 @@
 		      .attr("id", function(d) { return turnNameToId(d.data.name); })
 		      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
 
+		  node.append("image")
+			.attr("transform", function(d) { return "translate(-20,-20)"; })
+			.style("width", 40)
+			.style("height", 40)
+			.attr("href", function(d){ return "../images/" + d.data.profileImg; })
+		    .attr("clip-path", function(d){ return "url(#" + turnNameToId(d.data.name) + "-clipPath)"; });
+
 		  node.append("circle")
 		      .attr("class", "normalCircle")
-		      // .append("image")
-		      // .attr("href", function(d){ return "../images/" + d.data.profileImg; })
-		      // .attr("clip-path", function(d){ return "url(#" + turnNameToId(d.data.name) + "-clipPath)"; })
-		      // .style("fill", function(d){ return "url(#" + turnNameToId(d.data.name) + "-pattern)"; })
 		      .on("click", function(d){
 
 		      	if($scope.pivot == null){
@@ -122,7 +126,7 @@
 		      .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
 		      .text(function(d) { return d.data.name; });
 
-		  // draw links for people in tree
+		  // draw links for spouses in tree
 		  node.append("a")
 		  		.attr("class", "spouseText")
 		  		.attr("href", function(d) { 
@@ -260,7 +264,7 @@
 	}
 
 	var prepareImages = function(root){
-		console.log(root);
+		// console.log(root);
 
 		var def = d3.select("svg")
 			.append("defs");
@@ -276,15 +280,15 @@
 			.attr("r", 20)
 			.attr("fill", "#FFFFFF");
 
-		d3.select("svg")
-			.selectAll("image")
-			.data(root)
-			.enter().append("image")
-			.attr("transform", function(d) { return "translate(" + (d.y + 130) + "," + (d.x - 10) + ")"; }) // d.y + 130, d.x - 10
-			.style("width", 40)
-			.style("height", 40)
-			.attr("href", function(d){ return "../images/" + d.data.profileImg; })
-		    .attr("clip-path", function(d){ return "url(#" + turnNameToId(d.data.name) + "-clipPath)"; });
+		// d3.select("svg")
+		// 	.selectAll(".main-g")
+		// 	.data(root)
+		// 	.enter().append("image")
+		// 	.attr("transform", function(d) { return "translate(" + (d.y + 130) + "," + (d.x - 10) + ")"; }) // d.y + 130, d.x - 10
+		// 	.style("width", 40)
+		// 	.style("height", 40)
+		// 	.attr("href", function(d){ return "../images/" + d.data.profileImg; })
+		//     .attr("clip-path", function(d){ return "url(#" + turnNameToId(d.data.name) + "-clipPath)"; });
 
 	}
 
