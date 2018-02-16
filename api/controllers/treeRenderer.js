@@ -54,7 +54,7 @@
 		    .attr("clip-path", function(d){ return "url(#" + turnNameToId(d.data.name) + "-clipPath)"; });
 
 		  circleContainer.append("circle")
-		      .attr("class", "normalCircle")
+		      .attr("class", "circle normalCircle")
 		      .on("click", function(d){
 
 		      	if($scope.pivot == null){
@@ -66,8 +66,8 @@
 
 		      	d3.select(this)
 		      		.classed("normalCircle", false)
-		      		.classed("turnRedOther", false)
-		      		.classed("turnRedPivot", true);
+		      		.classed("hoverCircle", false)
+		      		.classed("selectedCircle", true);
 		      	$scope.$apply();
 		      })
 		      .on("mouseover", function(d){
@@ -75,8 +75,8 @@
 
 		      		d3.select("#" + $scope.oldPivotId)
 		      			.select("circle")
-		      			.classed("turnRedOther", false)
-		      			.classed("turnRedPivot", false)
+		      			.classed("hoverCircle", false)
+		      			.classed("selectedCircle", false)
 		      			.classed("normalCircle", true);
 
 		      		d3.selectAll(".pathCircle")
@@ -87,19 +87,19 @@
 		        
 			      	d3.select(this)
 			      		.classed("normalCircle", false)
-			      		.classed("turnRedOther", true);
+			      		.classed("hoverCircle", true);
 			      	$scope.$apply();
 		      	}else if($scope.pivot == null){
 		      		d3.select("#" + turnNameToId(d.id))
 		      			.select("circle")
 		      			.classed("normalCircle", false)
-		      			.classed("turnRedOther", true);
+		      			.classed("hoverCircle", true);
 		      	}
 		      })
 		      .on("mouseout", function(d){
 		      	if($scope.pivot != d){
 		      		d3.select(this)
-		      			.classed("turnRedOther", false)
+		      			.classed("hoverCircle", false)
 		      			.classed("normalCircle", true);
 
 		      		d3.selectAll(".path-link")
@@ -108,7 +108,7 @@
 		      	}else if($scope.pivot == null){
 		      		d3.select("#" + turnNameToId(d.id))
 		      			.select("circle")
-		      			.classed("turnRedOther", false)
+		      			.classed("hoverCircle", false)
 		      			.classed("normalCircle", true);
 		      	}
 		      });
